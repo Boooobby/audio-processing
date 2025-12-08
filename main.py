@@ -38,7 +38,7 @@ def main():
         # TapeStyle()
         # VinylStyle(crackle_amount=0.005)
         # RadioStyle()
-        PCMBitcrusherStyle(bit_depth=4)
+        # PCMBitcrusherStyle(bit_depth=4)
         # Normalizer()
     ]
     
@@ -52,7 +52,8 @@ def main():
     
     # Step 3: 导出播放
     mp3_path = exporter.export_to_mp3(output_wav)
-    exporter.regex_browser_playback(mp3_path)
+    # exporter.regex_browser_playback(mp3_path)
+    exporter.browser_playback(mp3_path)
 
 if __name__ == "__main__":
     main()
