@@ -9,6 +9,9 @@ from effects.vinyl import VinylStyle
 from effects.radio import RadioStyle
 from effects.normalizer import Normalizer
 from effects.pcm import PCMBitcrusherStyle
+from effects.doppler import DopplerEffect
+from effects.enhanced_am import EnhancedAMEffect
+from effects.fsk import FSKEffect
 
 def main():
     loader = AudioHandler()
@@ -35,10 +38,13 @@ def main():
     
     # 2. 配置主效果链 (风格化 + 最后归一化)
     style_chain = [
-        # TapeStyle()
-        # VinylStyle(crackle_amount=0.005)
-        # RadioStyle()
-        # PCMBitcrusherStyle(bit_depth=4)
+        # TapeStyle(), 
+        # VinylStyle(crackle_amount=0.005), 
+        # RadioStyle(), 
+        # PCMBitcrusherStyle(bit_depth=4), 
+        # DopplerEffect(), 
+        # EnhancedAMEffect(), 
+        FSKEffect()
         # Normalizer()
     ]
     
