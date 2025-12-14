@@ -1,4 +1,5 @@
 from pedalboard.io import AudioFile
+import numpy as np  
 
 class AudioPipeline:
     def run(self, input_path, output_path, pre_processors=None, main_effects=None):
@@ -8,9 +9,9 @@ class AudioPipeline:
         """
         if pre_processors is None: pre_processors = []
         if main_effects is None: main_effects = []
-        
+
         print(f"🚀 开始处理: {input_path}")
-        
+
         # 1. 读入
         with AudioFile(input_path) as f:
             audio = f.read(f.frames)
@@ -28,9 +29,18 @@ class AudioPipeline:
             print(f"   [{pass_count}] 风格化: {effect.name}")
             audio = effect.process(audio, samplerate)
             pass_count += 1
-            
-        # 4. 写入
-        with AudioFile(output_path, 'w', samplerate, audio.shape[0]) as f:
+
+        # 4. 写入 (修复了单声道/立体声的声道数判断 Bug) ★★★
+        # ----------------------------------------------------
+        if len(audio.shape) > 1:
+            # 如果是二维数组 (channels, samples)，取 shape[0]
+            num_channels = audio.shape[0]
+        else:
+            # 如果是一维数组 (samples,)，说明是单声道，声道数为 1
+            num_channels = 1
+
+        with AudioFile(output_path, 'w', samplerate, num_channels) as f:
             f.write(audio)
-            
+        # ----------------------------------------------------
+
         print(f"✅ 完成: {output_path}")
