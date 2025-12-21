@@ -49,7 +49,7 @@ def main():
     pipeline = AudioPipeline()
 
     # mp3文件入口
-    input_file = "./testmp3/test02.mp3"
+    input_file = "./testmp3/xmas.mp3"
     if not os.path.exists(input_file):
         os.makedirs(os.path.dirname(input_file), exist_ok=True)
         from pydub import AudioSegment
@@ -65,8 +65,9 @@ def main():
 
     # [链路 1] 原有复古效果组合
     vintage_chain = [
-        EnhancedAMEffect(), FSKEffect(), PCMBitcrusherStyle(bit_depth=4),
-        DopplerEffect(), Normalizer()
+        PCMBitcrusherStyle(bit_depth=8), 
+        VinylStyle(crackle_amount=0.005, hiss_level=0.01), 
+        ConvolutionReverb()
     ]
 
     # [链路 2] 混叠效应实验 (Aliasing)
