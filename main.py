@@ -19,6 +19,7 @@ from effects.convolution_reverb import ConvolutionReverb
 from effects.aliasing import AliasingStyle
 from effects.companding import CompandingStyle
 from effects.steganography import SpectrogramArtStyle
+from effects.channel_code import HammingCodeEffect, CRC32Effect, CombinedChannelCodeEffect
 
 # [新增] 导入可视化分析工具
 from analysis import AudioAnalyzer
@@ -65,9 +66,10 @@ def main():
 
     # [链路 1] 原有复古效果组合
     vintage_chain = [
-        PCMBitcrusherStyle(bit_depth=8), 
-        VinylStyle(crackle_amount=0.005, hiss_level=0.01), 
-        ConvolutionReverb()
+        # PCMBitcrusherStyle(bit_depth=8), 
+        # VinylStyle(crackle_amount=0.005, hiss_level=0.01), 
+        # ConvolutionReverb()
+        HammingCodeEffect()
     ]
 
     # [链路 2] 混叠效应实验 (Aliasing)
@@ -90,13 +92,13 @@ def main():
     style_chain = vintage_chain
     experiment_name = "Original_Vintage"
 
-    # --- 选项 B: 混叠效应 - 违反定理 (反面教材) ---
+    # --- 选项 B: 混叠效应 - 违反定理 ---
     # [原理] 强制降采样且不加滤波，导致高频折叠回低频。
     # [听感] 声音充满金属质感的“兹兹”杂音 (Robot Voice)。
     # style_chain = aliasing_broken_chain
     # experiment_name = "Aliasing_Broken_Test"
 
-    # --- 选项 C: 混叠效应 - 遵守定理 (正面教材) ---
+    # --- 选项 C: 混叠效应 - 遵守定理 ---
     # [原理] 先进行抗混叠滤波，再降采样。
     # [听感] 声音变闷（高频丢失），但非常干净，无杂音。
     # style_chain = aliasing_safe_chain

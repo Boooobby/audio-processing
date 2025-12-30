@@ -4,7 +4,7 @@ from .base import AudioEffect
 
 class AliasingStyle(AudioEffect):
     """
-     采样率变换与混叠效应
+    采样率变换与混叠效应
     增加了“重建滤波器”逻辑，让 Safe 模式的波形变平滑，频谱变干净。
     """
     def __init__(self, target_samplerate=4000, obey_nyquist=False):

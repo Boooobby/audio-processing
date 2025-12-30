@@ -2,7 +2,6 @@ import numpy as np
 from scipy.signal import butter, lfilter, hilbert
 from .base import AudioEffect  # 适配effects文件夹的相对导入
 
-
 class EnhancedAMEffect(AudioEffect):
     """
     增强版AM（调幅）调制解调音频处理器
