@@ -50,7 +50,7 @@ def main():
     pipeline = AudioPipeline()
 
     # mp3文件入口
-    input_file = "./testmp3/xmas.mp3"
+    input_file = "./testmp3/short-test.mp3"
     if not os.path.exists(input_file):
         os.makedirs(os.path.dirname(input_file), exist_ok=True)
         from pydub import AudioSegment
