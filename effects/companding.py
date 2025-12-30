@@ -4,7 +4,7 @@ from .base import AudioEffect
 
 class CompandingStyle(AudioEffect):
     """
-    非均匀量化 (A-law Companding)
+    非均匀量化
     模拟电话系统 (PCM-30/32) 中的 A律 压扩技术。
     流程: 信号 -> A律压缩 -> 均匀量化 -> A律扩张 -> 恢复信号
     """

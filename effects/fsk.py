@@ -1,17 +1,11 @@
 import numpy as np
 from scipy.signal import butter, lfilter, hilbert
-from .base import AudioEffect  # 适配effects文件夹的相对导入
-
+from .base import AudioEffect
 
 class FSKEffect(AudioEffect):
     """
     FSK（频移键控）调制解调音频处理器
     核心功能：模拟数字通信中的FSK调制（音频→数字比特→FSK载波）+ 解调（FSK载波→数字比特→音频）
-    关联通信原理知识点：
-    1. 数字调制：FSK基本原理（不同频率载波代表0/1比特）
-    2. 数模转换：音频信号的比特化抽样、量化
-    3. 载波同步：FSK解调的频率检测、比特同步
-    4. 滤波：带通滤波提取载波频率，低通滤波还原音频
     """
 
     def __init__(self):

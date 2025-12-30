@@ -25,7 +25,7 @@ class SpectrogramArtStyle(AudioEffect):
         self.hop_length = self.n_fft // 4
 
     def process(self, audio, samplerate):
-        print(f"🎨 [SpectrogramArt] 正在处理图片: {self.image_path}")
+        print(f"[SpectrogramArt] 正在处理图片: {self.image_path}")
 
         try:
             # 1. 读取图片并转为灰度图 (L模式)
@@ -36,7 +36,7 @@ class SpectrogramArtStyle(AudioEffect):
             # 白底会导致全屏噪音，所以我们需要反转颜色，让背景变黑(静音)。
             first_pixel = img.getpixel((0, 0))
             if first_pixel > 128:
-                print("   💡 检测到白底图片，正在自动反色以优化听感...")
+                print("   检测到白底图片，正在自动反色以优化听感...")
                 img = ImageOps.invert(img)
             # ==============================
 
@@ -72,6 +72,6 @@ class SpectrogramArtStyle(AudioEffect):
             return generated_audio
 
         except Exception as e:
-            print(f"❌ [Error] 图片处理失败: {e}")
+            print(f"[Error] 图片处理失败: {e}")
             # 失败时返回静音，防止程序崩溃
             return np.zeros_like(audio)

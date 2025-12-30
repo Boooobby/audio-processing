@@ -15,13 +15,12 @@ from effects.enhanced_am import EnhancedAMEffect
 from effects.fsk import FSKEffect
 from effects.convolution_reverb import ConvolutionReverb
 
-# [新增] 导入通信原理实验模块
 from effects.aliasing import AliasingStyle
 from effects.companding import CompandingStyle
 from effects.steganography import SpectrogramArtStyle
 from effects.channel_code import HammingCodeEffect, CRC32Effect, CombinedChannelCodeEffect
 
-# [新增] 导入可视化分析工具
+# 导入可视化分析工具
 from analysis import AudioAnalyzer
 from pedalboard.io import AudioFile
 
@@ -30,7 +29,7 @@ def cleanup_directories():
     """清理临时文件"""
     directories = ['temp_audio', 'output_audio']
     extensions = ['*.wav', '*.mp3', '*.html', '*.png']
-    print("\n🧹 正在清理临时文件...")
+    print("\n正在清理临时文件...")
     for folder in directories:
         if not os.path.exists(folder): continue
         for ext in extensions:
@@ -40,7 +39,7 @@ def cleanup_directories():
                     os.remove(f)
                 except:
                     pass
-    print("✨ 清理完成。")
+    print("清理完成。")
 
 
 def main():
@@ -62,8 +61,6 @@ def main():
 
     clean_chain = []  # 预处理链(留空)
 
-    # ==================== 1. 定义所有可能的链路 ====================
-
     # [链路 1] 原有复古效果组合
     vintage_chain = [
         # PCMBitcrusherStyle(bit_depth=8), 
@@ -83,10 +80,6 @@ def main():
     # [链路 4] 画中音 (Steganography)
     stego_chain = [SpectrogramArtStyle(image_path="secret.png", duration=5.0), Normalizer()]
 
-    # =============================================================
-    # 总控开关：请解开对应行的注释以选择实验场景 (一次只选一个)
-    # =============================================================
-
     # --- 选项 A: 复古风格综合演示 (默认) ---
     # [描述] 混合了调幅、频移、多普勒等多种效果，听起来像老旧电台。
     style_chain = vintage_chain
@@ -104,7 +97,7 @@ def main():
     # style_chain = aliasing_safe_chain
     # experiment_name = "Aliasing_Safe_Test"
 
-    # --- 选项 D: 非均匀量化 - A律压扩 (优化方案) ---
+    # --- 选项 D: 非均匀量化 - A律压扩  ---
     # [原理] 对小信号进行放大编码，模拟电话系统标准。
     # [听感] 在同样的 4-bit 低比特率下，信噪比显著提升，噪声更小。
     # style_chain = alaw_pcm_chain
@@ -122,10 +115,8 @@ def main():
     # style_chain = stego_chain
     # experiment_name = "Spectrogram_Art"
 
-    # =============================================================
-
     # 执行处理
-    print(f"🚀 运行链路: {experiment_name}")
+    print(f"运行链路: {experiment_name}")
     pipeline.run(
         input_path=wav_path,
         output_path=output_wav,
@@ -133,7 +124,7 @@ def main():
         main_effects=style_chain
     )
 
-    # === 可视化分析 ===
+    # 可视化分析
     print("\n--- 正在进行信号分析 ---")
     try:
         with AudioFile(wav_path) as f:
@@ -143,7 +134,7 @@ def main():
             processed_data = f.read(f.frames)[0]
 
         snr = AudioAnalyzer.calculate_snr(original_data, processed_data)
-        print(f"📈 信噪比 (SNR): {snr:.2f} dB")
+        print(f"信噪比 (SNR): {snr:.2f} dB")
 
         img_name = f"{experiment_name}_analysis.png"
         AudioAnalyzer.plot_comparison(
@@ -152,7 +143,7 @@ def main():
             filename=img_name
         )
     except Exception as e:
-        print(f"⚠️ 分析跳过 (可能是画中音导致长度不一致): {e}")
+        print(f"分析跳过 (可能是画中音导致长度不一致): {e}")
 
     # Step 3: 导出播放
     mp3_path = exporter.export_to_mp3(output_wav)

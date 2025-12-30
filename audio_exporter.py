@@ -7,7 +7,6 @@ class AudioExporter:
     def __init__(self, output_dir="output_audio"):
         """
         初始化导出器
-        :param output_dir: 最终成品存放的目录
         """
         self.output_dir = Path(output_dir)
         self._ensure_dir()
@@ -19,9 +18,6 @@ class AudioExporter:
     def export_to_mp3(self, wav_path, bitrate="192k"):
         """
         将 WAV 转码为 MP3 (模拟 Web 下载用的最终格式)
-        :param wav_path: 输入的 wav 路径
-        :param bitrate: 比特率 (通信原理考点：压缩率与音质的权衡)
-        :return: 导出的 mp3 绝对路径
         """
         wav_path = Path(wav_path)
         if not wav_path.exists():
@@ -36,8 +32,7 @@ class AudioExporter:
 
     def regex_browser_playback(self, audio_path):
         """
-        生成一个临时的 HTML 页面并在浏览器打开，
-        模拟未来 Web 应用的前端播放效果。
+        生成一个 HTML 页面并在浏览器打开
         """
         audio_path = Path(audio_path).absolute().as_uri()
         
@@ -90,7 +85,7 @@ class AudioExporter:
         """
         生成一个包含实时频谱可视化的 HTML 播放器
         """
-        # 获取文件名用于标题，确保路径对浏览器友好
+        # 获取文件名用于标题
         filename = os.path.basename(audio_path)
         
         # HTML 模板字符串 (包含 CSS 和 JS)
@@ -315,7 +310,7 @@ class AudioExporter:
         with open(html_path, "w", encoding="utf-8") as f:
             f.write(html_content)
             
-        print(f"📊 可视化界面已生成: {html_path}")
+        print(f"可视化界面已生成: {html_path}")
         return html_path
 
     def browser_playback(self, file_path):

@@ -111,7 +111,7 @@ class HammingCodeEffect(AudioEffect):
         return (bits + noise) % 2
 
     def process(self, audio, samplerate):
-        """核心处理流程 - 完整修复版"""
+        """核心处理流程"""
         try:
             # 保存原始信息
             original_shape = audio.shape
@@ -124,7 +124,7 @@ class HammingCodeEffect(AudioEffect):
             processed_channels = []
 
             for chan_idx, chan in enumerate(audio):
-                # 1. 音频转比特（使用安全版）
+                # 1. 音频转比特
                 bits = self._audio2bits_safe(chan)
 
                 # 2. 补零使比特数为4的整数倍
@@ -152,7 +152,7 @@ class HammingCodeEffect(AudioEffect):
                 # 6. 去除补零
                 decoded = decoded[:orig_len]
 
-                # 7. 比特转音频（使用安全版）
+                # 7. 比特转音频
                 chan_proc = self._bits2audio_safe(np.array(decoded, dtype=np.uint8))
 
                 # 裁剪到原长度
@@ -182,7 +182,7 @@ class HammingCodeEffect(AudioEffect):
 
 
 class CRC32Effect(AudioEffect):
-    """CRC32冗余校验器 - 完整修复版"""
+    """CRC32冗余校验器"""
 
     def __init__(self):
         super().__init__(name="CRC32 Check")
@@ -254,7 +254,7 @@ class CRC32Effect(AudioEffect):
         return np.array(bits, dtype=np.uint8)
 
     def _bits2audio_safe(self, bits):
-        """比特流转音频：安全版"""
+        """比特流转音频"""
         if len(bits) % 16 != 0:
             pad_len = 16 - (len(bits) % 16)
             bits = np.pad(bits, (0, pad_len), 'constant')
@@ -281,7 +281,7 @@ class CRC32Effect(AudioEffect):
         return audio_float
 
     def process(self, audio, samplerate):
-        """CRC32处理流程 - 完整修复版"""
+        """CRC32处理流程"""
         try:
             original_shape = audio.shape
 
@@ -325,7 +325,7 @@ class CRC32Effect(AudioEffect):
 
 
 class CombinedChannelCodeEffect(AudioEffect):
-    """组合信道编码：汉明码（前向纠错）+ CRC（结尾校验）- 完整修复版"""
+    """组合信道编码：汉明码（前向纠错）+ CRC（结尾校验）"""
 
     def __init__(self):
         super().__init__(name="Hamming + CRC Code")
@@ -336,7 +336,6 @@ class CombinedChannelCodeEffect(AudioEffect):
         self.error_rate = 0.0001
 
     def process(self, audio, samplerate):
-        """完整流程 - 完整修复版"""
         try:
             original_shape = audio.shape
 
@@ -411,7 +410,7 @@ class CombinedChannelCodeEffect(AudioEffect):
 
 
 class HammingEncoder(AudioEffect):
-    """独立汉明编码器：音频 → 编码比特流 - 完整修复版"""
+    """独立汉明编码器：音频 → 编码比特流"""
 
     def __init__(self, error_rate=0.0001):
         super().__init__(name="Hamming Encoder")
@@ -456,7 +455,7 @@ class HammingEncoder(AudioEffect):
             p3 = d2 ^ d3 ^ d4
             coded.extend([p1, p2, d1, p3, d2, d3, d4])
 
-        # 计算实际输出长度（考虑编码率7/4）
+        # 计算实际输出长度
         output_len = orig_len * 7 // 4
         return np.array(coded[:output_len], dtype=np.uint8)
 
@@ -470,7 +469,7 @@ class HammingEncoder(AudioEffect):
 
 
 class HammingDecoder(AudioEffect):
-    """独立汉明解码器：编码比特流 → 音频 - 完整修复版"""
+    """独立汉明解码器：编码比特流 → 音频"""
 
     def __init__(self, error_rate=0.0001):
         super().__init__(name="Hamming Decoder")
@@ -541,7 +540,7 @@ class HammingDecoder(AudioEffect):
 
     def process(self, coded_bits, samplerate):
         """输入编码比特流，输出解码音频"""
-        print("🔢 汉明解码器：编码比特流 → 音频")
+        print("汉明解码器：编码比特流 → 音频")
         decoded_bits = self._hamming_decode_only(coded_bits)
         audio = self._bits2audio(decoded_bits)
         print(f"   解码完成：{len(coded_bits)}位 → {len(audio)}采样点")
